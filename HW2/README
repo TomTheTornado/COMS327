@@ -1,0 +1,10 @@
+Assignment 1.02: Dungeon Load/Save
+Thomas Powell
+
+This file will save and load a 80x21 dungeon. The graphics and hardness will save and load
+along with it. If you use "./dungeon" without any arguments after it, a random dungeon will generate.
+If "./dungeon --save" is used, the random dungeon will save. If "./dungeon --load is used, a dungeon file
+will load from /home/"insert_username_here"/.rlg327/dungeon. When "./dungeon --load --save" is used
+the dungeon will load and then save.
+
+Use "make clean" to delete the executable dungeon file.

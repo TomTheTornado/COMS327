@@ -1,0 +1,5 @@
+01/21/19: Implemented sobel function
+01/21/19: Fixed bugs for sobel function
+01/21/19: Added constraints to smooth out the image (0 - 255 values)
+01/22/19: Made it so the program reads the image through the command line
+01/23/19: Compressed the folder into a tar.gz file

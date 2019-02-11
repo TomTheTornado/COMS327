@@ -1,0 +1,14 @@
+Assignment 1: Dungeon Generation
+Thomas Powell
+
+This file will create a random 80x21 dungeon. The border of this dungeon
+however will not change and is displayed using '-' and '|' characters.
+This dungeon will spawn a minimum of 6 rooms and a maximum of 10 rooms.
+Rooms are all connected by corridors and the rooms do not overlap. 
+1-2 upstairs and 1-2 downstairs will spawn in a random accessible locations 
+in the dungeon.
+
+Set the dungeon.c file in the proper directory and then use "make" to compile it.
+To generate the dungeon use "./dungeon" which will generate the random dungeon.
+
+Use "make clean" to delete the executable dungeon file.

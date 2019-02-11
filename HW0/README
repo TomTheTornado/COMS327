@@ -1,0 +1,12 @@
+Assignment 0: Sobel Filter
+Thomas Powell
+
+This file will take a 1024x1024 ".pgm" file and use a sobel filter
+on the image to outline the edges.
+
+Set the sobel.c file to proper directory and then use "make" to
+compile it. To convert the image, use "./sobel <your image name>.pgm"
+which will convert your image with the filter and output as sobel.pgm. 
+
+Use "make clean" in the command line in order to clean "sobel.pgm"
+or files ending in ".edge.pgm".

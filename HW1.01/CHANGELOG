@@ -1,0 +1,17 @@
+1/25/19 
+    Started dungeon.c
+    Print border around dungeon
+1/26/19 
+    Generate number of rooms and locations
+    Generate room size
+    Fixed room and wall overlaps
+1/27/19
+    Fixed room formatting
+    Changed number of generated rooms to use decay method
+    Saves locations of the 4 corners of every room
+    Added corridors
+    Fixed corridors to connect to every room
+2/1/19
+    Generates stairs in the dungeon
+
+    
