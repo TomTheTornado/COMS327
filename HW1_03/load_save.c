@@ -124,7 +124,7 @@ int load_dungeon(dungeon_t *dungeon)
     }
 
     fclose(f);
-    printf("Finished Reading.\n");
+    //printf("Finished Reading.\n");
 
     return 0;
 }
@@ -188,7 +188,7 @@ int save_dungeon(dungeon_t *dungeon)
     }
 
     fclose(f);                                              //close file
-    printf("Finished Writing.\n");                  
+    //printf("Finished Writing.\n");                  
     return 0;
 }
 

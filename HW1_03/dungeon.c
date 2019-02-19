@@ -8,7 +8,38 @@ void free_dungeon(dungeon_t *dungeon)
     free(dungeon->rooms);
 }
 
-void place_player(dungeon_t *d)
+void assign_weight(dungeon_t *dungeon){
+    uint8_t x, y;
+    for(y = 0; y < max_dimY; y++){
+        for(x = 0; x < max_dimX; x++){
+            if(dungeon->hardness[y][x] == 255){
+                dungeon->weight[y][x] = 9;
+            }
+            if(dungeon->hardness[y][x] == 0){
+                dungeon->weight[y][x] = 1;
+            }
+            else{
+                dungeon->weight[y][x] = ((dungeon->hardness[y][x]) / 85) + 1;
+            }
+        }
+    }
+}
+
+void print_playerMap(dungeon_t *dungeon){
+    uint8_t type = 1;
+    uint8_t playerMap;
+
+    print_dungeon(dungeon, type);
+}
+
+void print_tunnelingMap(dungeon_t *dungeon){
+    uint8_t type = 2;
+    dungeon_t tunnelingMap;
+
+    print_dungeon(dungeon, type);
+}
+
+void place_player(dungeon_t *dungeon)
 {
     uint8_t x, y;
 
@@ -17,10 +48,10 @@ void place_player(dungeon_t *d)
         x = rand() % (max_dimX - 1) + 1;
         y = rand() % (max_dimY - 1) + 1;
 
-        if (d->hardness[y][x] == 0)
+        if (dungeon->hardness[y][x] == 0)
         {
-            d->pc.x = x;
-            d->pc.y = y;
+            dungeon->pc.x = x;
+            dungeon->pc.y = y;
             break;
         }
     }
@@ -39,12 +70,6 @@ int main(int argc, char const *argv[]){
     
     //Creates the dungeon struct.
     dungeon_t dungeon;
-
-    //Creates the maximum number of upstairs and downstairs
-    // dungeon.numUpStrs = ((rand() % max_upstrs) + 1);
-    // dungeon.numDownStrs = ((rand() % max_downstrs) + 1);
-    // dungeon.upstrs = malloc(sizeof(stairs_t)*dungeon.numUpStrs);
-    // dungeon.downstrs = malloc(sizeof(stairs_t)*dungeon.numDownStrs);
 
     action_t action;
 
@@ -83,8 +108,15 @@ int main(int argc, char const *argv[]){
         break;
     }
 
-    printf("Seed: %d\n", seed);
-    print_dungeon(&dungeon);
+    //printf("Seed: %d\n", seed);
+    print_dungeon(&dungeon, 0);//normal
+    //hardness
+    print_dungeon(&dungeon, 4);
+    //weight
+    print_dungeon(&dungeon, 3);
+    //print_playerMap(&dungeon);
+    //print_tunnelingMap(&dungeon);
+
 
     //free_dungeon(&dungeon);
     return 0;
@@ -96,14 +128,28 @@ void generate_dungeon(dungeon_t *dungeon){
     assign_hardness(dungeon);
     create_stairs(dungeon);
     place_player(dungeon);
+    assign_weight(dungeon);
     
 }
-void print_dungeon(dungeon_t *dungeon){
+void print_dungeon(dungeon_t *dungeon, uint8_t type){
     int y, x;
     for(y = 0; y < max_dimY; y++){
         for(x = 0; x < max_dimX; x++){
             if(x == dungeon->pc.x && y == dungeon->pc.y){
                 printf("%c", '@');
+            }
+            //char moves
+            else if(type == 1){
+                printf("%d", dungeon->playerMap[y][x]);
+            }
+            else if(type == 2){
+                printf("%d", dungeon->tunnelingMap[y][x]);
+            }
+            else if(type == 3){
+                printf("%d", dungeon->weight[y][x]);
+            }
+            else if(type == 4){
+                printf("%2x", dungeon->hardness[y][x]);
             }
             else{
                 printf("%c", dungeon->map[y][x]);
@@ -111,7 +157,7 @@ void print_dungeon(dungeon_t *dungeon){
         }
         printf("\n");
     }
-    place_player(dungeon);
+    printf("\n");
 } 
 void assign_border(dungeon_t *dungeon){
     int y, x;
