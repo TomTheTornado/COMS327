@@ -45,9 +45,9 @@ int load_dungeon(dungeon_t *dungeon)
     uint16_t i, j, k;
 
     fread(&marker, sizeof(char), 12, f);
-    printf("%s\n", marker);
+    //printf("%s\n", marker);
     fread(&version_marker, sizeof(uint32_t), 1, f);
-    printf("%d\n", be16toh(version_marker));
+    //printf("%d\n", be16toh(version_marker));
     marker[12] = '\0';
     if (strcmp(marker, MARK)) //check file marker
         return -1;
@@ -56,10 +56,10 @@ int load_dungeon(dungeon_t *dungeon)
         return -1;
 
     fread(&file_size, sizeof(uint32_t), 1, f);
-    printf("%d\n", be32toh(file_size));
+    //printf("%d\n", be32toh(file_size));
     fread(&dungeon->pc.x, sizeof(uint8_t), 1, f);
     fread(&dungeon->pc.y, sizeof(uint8_t), 1, f);
-    printf("Player: %d, %d\n", dungeon->pc.y, dungeon->pc.x);
+    //printf("Player: %d, %d\n", dungeon->pc.y, dungeon->pc.x);
 
    // printf("X: %d, Y: %d\n", dungeon->pc.x, dungeon->pc.y);
     fread(&dungeon->hardness, sizeof(uint8_t), 1680, f);
@@ -86,43 +86,14 @@ int load_dungeon(dungeon_t *dungeon)
             }
         }
     }
-    printf("# of rooms: %d\n", dungeon->numRooms);
-
-    // uint16_t numberOfMaxUpStairs;
+    //printf("# of rooms: %d\n", dungeon->numRooms);
 
 
-    // fread(&numberOfMaxUpStairs, 2, 1, f);
-    // be16toh(numberOfMaxUpStairs);
-    // dungeon->upstrs = malloc(numberOfMaxUpStairs * sizeof(location_t));
-    // printf("Up: %d\n", numberOfMaxUpStairs);
-    // for (i = 0; i < numberOfMaxUpStairs; i++){
-    //     fread(&dungeon->upstrs[i].x, 1, 1, f);
-    //     fread(&dungeon->upstrs[i].y, 1, 1, f);
-    //     if(dungeon->hardness[dungeon->upstrs[i].y][dungeon->upstrs[i].x] == 0){
-    //         dungeon->map[dungeon->upstrs[i].y][dungeon->upstrs[i].x] = '<';
-    //     }
-    //     printf("Num %d: X:%d, Y:%d\n", i, dungeon->upstrs[i].x, dungeon->upstrs[i].y);
-    // }
-
-    // uint16_t numberOfMaxDownStairs;
-
-    // fread(&numberOfMaxDownStairs, 2, 1, f);
-    // be16toh(numberOfMaxDownStairs);
-    // dungeon->downstrs = malloc(numberOfMaxDownStairs * sizeof(location_t));
-    // printf("Down: %d\n", numberOfMaxDownStairs);
-    // for (i = 0; i < numberOfMaxDownStairs; i++){
-    //     fread(&dungeon->downstrs[i].x, 1, 1, f);
-    //     fread(&dungeon->downstrs[i].y, 1, 1, f);
-    //     if(dungeon->hardness[dungeon->downstrs[i].y][dungeon->downstrs[i].x] == 0){
-    //         dungeon->map[dungeon->downstrs[i].y][dungeon->downstrs[i].x] = '>';
-    //     }
-    //     printf("Num %d: X:%d, Y:%d\n", i, dungeon->downstrs[i].x, dungeon->downstrs[i].y);
-    // }
     
     //Stairs
     uint16_t num_stairs;
     uint8_t x, y;
-
+    //upstairs
     fread(&num_stairs, 2, 1, f);
     num_stairs = be16toh(num_stairs);
     for (; num_stairs; num_stairs--) {
@@ -130,7 +101,7 @@ int load_dungeon(dungeon_t *dungeon)
         fread(&y, 1, 1, f);
         dungeon->map[y][x] = '<';
     }
-
+    //downstairs
     fread(&num_stairs, 2, 1, f);
     num_stairs = be16toh(num_stairs);
     for (; num_stairs; num_stairs--) {
@@ -139,39 +110,6 @@ int load_dungeon(dungeon_t *dungeon)
         dungeon->map[y][x] = '>';
     }
 
-
-    //upstairs
-
-    // fread(&dungeon->numUpStrs, sizeof(uint16_t), 1, f);
-    // dungeon->numUpStrs = be16toh(dungeon->numUpStrs);
-
-    // printf("Load Up: %d\n", dungeon->numUpStrs);
-
-    // dungeon->upstrs = malloc(sizeof(location_t) * dungeon->numUpStrs);
-    // for (i = 0; i < dungeon->numUpStrs; i++)
-    // {
-    //     fread(&dungeon->upstrs[i].x, sizeof(uint8_t), 1, f);
-    //     fread(&dungeon->upstrs[i].y, sizeof(uint8_t), 1, f);
-    //     printf("X:%d, Y:%d\n", dungeon->upstrs[i].x, dungeon->upstrs[i].y);
-    //     //add to map
-    //     dungeon->map[dungeon->upstrs[i].y][dungeon->upstrs[i].x] = '<';
-    // }
-    //dungeon->map[14]S[15] = '<';
-
-    // //downstairs
-    
-    // fread(&dungeon->numDownStrs, sizeof(uint16_t), 1, f);
-    // dungeon->numDownStrs = be16toh(dungeon->numDownStrs);
-    // printf("Load Down: %d\n", dungeon->numDownStrs);
-    // //printf("%d\n", dungeon->numDownStrs);
-    // dungeon->downstrs = malloc(sizeof(location_t) * dungeon->numDownStrs);
-    // for (i = 0; i < dungeon->numDownStrs; i++)
-    // {
-    //     fread(&dungeon->downstrs[i].x, sizeof(uint8_t), 1, f);
-    //     fread(&dungeon->downstrs[i].y, sizeof(uint8_t), 1, f);
-    //     //add to map
-    //     dungeon->map[dungeon->downstrs[i].y][dungeon->downstrs[i].x] = '>';
-    // }
 
     //Corridors
     for (i = 0; i < max_dimY; i++)
@@ -206,7 +144,7 @@ int save_dungeon(dungeon_t *dungeon)
     numUpStrs = htobe16(numUpStrs);
     uint16_t numDownStrs = dungeon->numDownStrs;
     numDownStrs = htobe16(numDownStrs);
-    printf("Up:%d, Down:%d\n", numUpStrs, numDownStrs);
+    //printf("Up:%d, Down:%d\n", numUpStrs, numDownStrs);
 
 
     open_file(&f, write);                                   //open file
@@ -231,22 +169,22 @@ int save_dungeon(dungeon_t *dungeon)
 
     //upstairs
     fwrite(&numUpStrs, sizeof(uint16_t), 1, f);          //number of up stairs
-    printf("Save Up: %d\n", dungeon->numUpStrs);
+    //printf("Save Up: %d\n", dungeon->numUpStrs);
     for (i = 0; i < dungeon->numUpStrs; i++)
     {
         fwrite(&dungeon->upstrs[i].x, sizeof(uint8_t), 1, f);   //upstair x
         fwrite(&dungeon->upstrs[i].y, sizeof(uint8_t), 1, f);   //upstair y
-        printf("%d. %d, %d\n", i, dungeon->upstrs[i].y, dungeon->upstrs[i].x);
+        //printf("%d. %d, %d\n", i, dungeon->upstrs[i].y, dungeon->upstrs[i].x);
     }
 
     //downstairs
     fwrite(&numDownStrs, sizeof(uint16_t), 1, f);        //num of down stairs
-    printf("Save Down: %d\n", dungeon->numDownStrs);
+    //printf("Save Down: %d\n", dungeon->numDownStrs);
     for (i = 0; i < dungeon->numDownStrs; i++)
     {
         fwrite(&dungeon->downstrs[i].x, sizeof(uint8_t), 1, f); //downstair x
         fwrite(&dungeon->downstrs[i].y, sizeof(uint8_t), 1, f); //downstair y
-        printf("%d. %d, %d\n", i, dungeon->downstrs[i].y, dungeon->downstrs[i].x);
+        //printf("%d. %d, %d\n", i, dungeon->downstrs[i].y, dungeon->downstrs[i].x);
     }
 
     fclose(f);                                              //close file

@@ -8,53 +8,6 @@ void free_dungeon(dungeon_t *dungeon)
     free(dungeon->rooms);
 }
 
-void place_stairs(dungeon_t *d)
-{
-    // d->numDownStrs = ((rand() % 2) + 1);
-    // d->numUpStrs = ((rand() % 2) + 1);
-    d->numDownStrs = 1;
-    d->numUpStrs = 1;
-    uint8_t x, y;
-    int i;
-    while (1)
-    {
-        x = rand() % (max_dimX - 1) + 1;
-        y = rand() % (max_dimY - 1) + 1;
-
-        if (d->hardness[y][x] == 0 && d->map[y][x] != '<' && d->map[y][x] != '@')
-        {
-            
-            d->downstrs = malloc(sizeof(location_t));
-            d->downstrs[0].x = x;
-            d->downstrs[0].y = y;
-
-            d->map[y][x] = '>';
-            d->hardness[y][x] = 0;
-            break;
-        }
-    }
-
-    i = 0;
-    while (1)
-    {
-        x = rand() % (max_dimX - 1) + 1;
-        y = rand() % (max_dimY - 1) + 1;
-
-        if (d->hardness[y][x] == 0 && d->map[y][x] != '>' && d->map[y][x] != '@')
-        {
-            
-            d->upstrs = malloc(sizeof(location_t));
-            d->upstrs[0].x = x;
-            d->upstrs[0].y = y;
-
-            d->map[y][x] = '<';
-            d->hardness[y][x] = 0;
-            break;
-        }
-    }
-    return;
-}
-
 void place_player(dungeon_t *d)
 {
     uint8_t x, y;
@@ -64,11 +17,10 @@ void place_player(dungeon_t *d)
         x = rand() % (max_dimX - 1) + 1;
         y = rand() % (max_dimY - 1) + 1;
 
-        if (d->hardness[y][x] == 0 && d->map[y][x] == '.')
+        if (d->hardness[y][x] == 0)
         {
             d->pc.x = x;
             d->pc.y = y;
-            d->map[y][x] = '@';
             break;
         }
     }
@@ -134,7 +86,7 @@ int main(int argc, char const *argv[]){
     printf("Seed: %d\n", seed);
     print_dungeon(&dungeon);
 
-    free_dungeon(&dungeon);
+    //free_dungeon(&dungeon);
     return 0;
 }
 void generate_dungeon(dungeon_t *dungeon){
@@ -142,17 +94,24 @@ void generate_dungeon(dungeon_t *dungeon){
     create_rooms(dungeon);
     create_corridors(dungeon);
     assign_hardness(dungeon);
-    place_stairs(dungeon);
+    create_stairs(dungeon);
     place_player(dungeon);
+    
 }
 void print_dungeon(dungeon_t *dungeon){
     int y, x;
     for(y = 0; y < max_dimY; y++){
         for(x = 0; x < max_dimX; x++){
-            printf("%c", dungeon->map[y][x]);
+            if(x == dungeon->pc.x && y == dungeon->pc.y){
+                printf("%c", '@');
+            }
+            else{
+                printf("%c", dungeon->map[y][x]);
+            }
         }
         printf("\n");
     }
+    place_player(dungeon);
 } 
 void assign_border(dungeon_t *dungeon){
     int y, x;
@@ -292,9 +251,6 @@ void create_rooms(dungeon_t *dungeon){
         dungeon->rooms[i].length = roomDetails[i][4];
     }
 
-    //Assigns player location starting point
-    dungeon->pc.y = dungeon->rooms[0].y;
-    dungeon->pc.x = dungeon->rooms[0].x;
 }
 void assign_corridor(dungeon_t *dungeon, uint8_t x, uint8_t y){
 
