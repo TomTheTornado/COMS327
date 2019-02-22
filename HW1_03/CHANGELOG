@@ -37,3 +37,11 @@ Version 1.03
     Added a little more variety to corridors
     Bug fixed save and load
 2/18/19
+    Implemented weight
+2/20/19
+    Implemented heap.h and heap.c from the 1.02 solution
+    Removed weight
+    Added non-tunneling
+    Added tunneling
+2/21/19
+    Added special cases if room or corridor is disconnected from player

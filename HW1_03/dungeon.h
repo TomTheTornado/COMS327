@@ -50,8 +50,8 @@ typedef struct dungeon{
     uint8_t numDownStrs;
     location_t pc;
     uint8_t weight[max_dimY][max_dimX];
-    uint8_t playerMap[max_dimY][max_dimX];
-    uint8_t tunnelingMap[max_dimY][max_dimX];
+    uint16_t nonTunnelingMap[max_dimY][max_dimX];
+    uint16_t tunnelingMap[max_dimY][max_dimX];
 } dungeon_t;  
 
 /**

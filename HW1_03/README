@@ -1,0 +1,16 @@
+Assignment 1.03: Path Finding
+Thomas Powell
+
+This file will print a dungeon, print a non-tunneling path, and print a tunneling path.
+
+Use "make" to compile executable dungeon.
+
+Use "./dungeon" to generate a random dungeon.
+
+Use "./dungeon --save" to save dungeon to /home/"insert_username_here"/.rlg327/dungeon
+
+Use "./dungeon --load" to load dungeon from same location.
+
+Use "./dungeon -ls" to load and save the dungeon.
+
+Use "make clean" to delete the executable dungeon file.
