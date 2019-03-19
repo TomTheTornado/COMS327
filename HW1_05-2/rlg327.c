@@ -235,6 +235,7 @@ int main(int argc, char *argv[])
      * per second, as opposed to time().           */
     gettimeofday(&tv, NULL);
     seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
+    //seed = 530074149;
   }
 
   if (!do_load && !do_image) {
@@ -272,15 +273,17 @@ int main(int argc, char *argv[])
   while (pc_is_alive(&d) && dungeon_has_npcs(&d)) {
     
     render_dungeon(&d);
+    //usleep(250000);
     //do_moves(&d);
     //scanf("%c", &keyIn); //pc
     
     keyIn = 0;
     keyIn = getch();
 
+
     
-    nextMoveKey(keyIn);
-    
+    nextMoveKey(keyIn, &d);
+    //render_dungeon(&d);
 
     if(keyIn == 'q' || keyIn == 'Q'){
       quitGame = 1;
@@ -322,16 +325,17 @@ int main(int argc, char *argv[])
   
   if (quitGame == 0){
     printf("%s", pc_is_alive(&d) ? triumph : ganon);
-    printf("You defended your life in the face of %u deadly beasts.\n"
-           "You avenged the cruel and untimely murders of %u "
-           "peaceful dungeon residents.\n",
-           d.pc.kills[kill_direct], d.pc.kills[kill_avenged]);
+    // printf("You defended your life in the face of %u deadly beasts.\n"
+    //        "You avenged the cruel and untimely murders of %u "
+    //        "peaceful dungeon residents.\n",
+    //        d.pc.kills[kill_direct], d.pc.kills[kill_avenged]);
 
     pc_delete(d.pc.pc);
   }
   else{
     printf("%s", quitRLG);
     printf("You quit the game.\n");
+    pc_delete(d.pc.pc);
   }
   delete_dungeon(&d);
 

@@ -2,6 +2,6 @@
 # define MOVEIN_H
 
 
-void nextMoveKey(int n);
+void nextMoveKey(int n, dungeon_t *d);
 
 #endif

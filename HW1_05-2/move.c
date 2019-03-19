@@ -44,7 +44,7 @@ void move_character(dungeon_t *d, character_t *c, pair_t next)
   }
 }
 
-void do_moves(dungeon_t *d)
+void do_moves(dungeon_t *d, int move)
 {
   pair_t next;
   character_t *c;
@@ -52,7 +52,8 @@ void do_moves(dungeon_t *d)
 
   /* Remove the PC when it is PC turn.  Replace on next call.  This allows *
    * use to completely uninit the heap when generating a new level without *
-   * worrying about deleting the PC.                                       */
+   * worrying about 
+   * deleting the PC.                                       */
 
   if (pc_is_alive(d)) {
     /* The PC always goes first one a tie, so we don't use new_event().  *
@@ -104,14 +105,18 @@ void do_moves(dungeon_t *d)
      * and recreated every time we leave and re-enter this function.    */
     e->c = NULL;
     event_delete(e);
-    pc_next_pos(d, next);                                                         ////////////////////////PC MOVEMENT
+    pc_next_pos(d, next, move);                                                         ////////////////////////PC MOVEMENT
     next[dim_x] += c->position[dim_x];
     next[dim_y] += c->position[dim_y];
+    // pc_next_pos(d, p);                                                         ////////////////////////PC MOVEMENT
+    // *p[dim_x] += c->position[dim_x];
+    // *p[dim_y] += c->position[dim_y];
     if (mappair(next) <= ter_floor) {
       mappair(next) = ter_floor_hall;
       hardnesspair(next) = 0;
     }
     move_character(d, c, next);
+    // move_character(d, c, p);
 
     dijkstra(d);
     dijkstra_tunnel(d);

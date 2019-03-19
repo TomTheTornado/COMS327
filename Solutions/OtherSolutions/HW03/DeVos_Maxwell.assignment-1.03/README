@@ -1,0 +1,35 @@
+Computer Science 327 Dungeon Crawler
+====================================
+Author: Maxwell DeVos
+
+About
+-----
+This project is a dungeon crawler being developed in c for CS327. Current functionality 
+includes generating a dungeon with connecting corridors and then drawing it to a terminal. 
+It also supports saving and loading files from its default save directory or from its 
+working directory if that location was not found. It also displays a distance map, hardness map
+and a cost map for future ai implementations
+
+
+Switches
+--------
+--load, -l
+    Loads a dungeon from a save file
+--save, -s
+    Saves a dungeon to a file
+--seed=<seed> 
+    supplies a seed to the dungeon generator
+
+
+Compilation
+-----------
+Compilation includes running the below command in the home directory of the project:
+    make
+
+
+Running
+-------
+Running the program requires you to run the command:
+    make run
+Or:
+    ./bin/dungeon <Optional Switches>

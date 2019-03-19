@@ -23,7 +23,7 @@ typedef struct corridor_path {
   uint8_t pos[2];
   uint8_t from[2];
   int32_t cost;
-} corridor_path_t;
+} corridor_path_t;int regen_dungeon(dungeon_t *d);
 
 /*
 static uint32_t in_room(dungeon_t *d, int16_t y, int16_t x)
@@ -42,6 +42,32 @@ static uint32_t in_room(dungeon_t *d, int16_t y, int16_t x)
   return 0;
 }
 */
+
+
+static int remake_rooms(dungeon_t *d)
+{
+  uint32_t i;
+
+  for (i = MIN_ROOMS; i < MAX_ROOMS && rand_under(5, 8); i++)
+    ;
+  d->num_rooms = i;
+  d->rooms = realloc(d->rooms, sizeof (*d->rooms) * d->num_rooms);
+  
+  for (i = 0; i < d->num_rooms; i++) {
+    d->rooms[i].size[dim_x] = ROOM_MIN_X;
+    d->rooms[i].size[dim_y] = ROOM_MIN_Y;
+    while (rand_under(3, 5) && d->rooms[i].size[dim_x] < ROOM_MAX_X) {
+      d->rooms[i].size[dim_x]++;
+    }
+    while (rand_under(3, 5) && d->rooms[i].size[dim_y] < ROOM_MAX_Y) {
+      d->rooms[i].size[dim_y]++;
+    }
+  }
+
+  return 0;
+}
+
+
 
 static uint32_t adjacent_to_room(dungeon_t *d, int16_t y, int16_t x)
 {
@@ -622,44 +648,59 @@ int gen_dungeon(dungeon_t *d)
   return 0;
 }
 
+int regen_dungeon(dungeon_t *d)
+{
+  empty_dungeon(d);
+
+  do {
+    remake_rooms(d);
+  } while (place_rooms(d));
+  connect_rooms(d);
+  place_stairs(d);
+
+  return 0;
+}
+
 void render_dungeon(dungeon_t *d)
 {
   pair_t p;
 
   //putchar('\n');
-  //mvaddch(p[dim_y], p[dimX])
+  //mvaddch(p[dim_y], p[dimX], )
+  mvaddstr(0, 0, "");
+  refresh();
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
       if (charpair(p)) {
         //putchar(charpair(p)->symbol);
-        mvaddch(p[dim_y], p[dim_x], (charpair(p)->symbol));
+        mvaddch(p[dim_y] + 1, p[dim_x], (charpair(p)->symbol));
       } else {
         switch (mappair(p)) {
         case ter_wall:
         case ter_wall_immutable:
           //putchar(' ');
-          mvaddch(p[dim_y], p[dim_x], ' ');
+          mvaddch(p[dim_y] + 1, p[dim_x], ' ');
           break;
         case ter_floor:
         case ter_floor_room:
           //putchar('.');
-          mvaddch(p[dim_y], p[dim_x], '.');
+          mvaddch(p[dim_y] + 1, p[dim_x], '.');
           break;
         case ter_floor_hall:
           //putchar('#');
-          mvaddch(p[dim_y], p[dim_x], '#');
+          mvaddch(p[dim_y] + 1, p[dim_x], '#');
           break;
         case ter_debug:
-          mvaddch(p[dim_y], p[dim_x], '*');
+          mvaddch(p[dim_y] + 1, p[dim_x], '*');
           //putchar('*');
           fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
           break;
         case ter_stairs_up:
           //putchar('<');
-          mvaddch(p[dim_y], p[dim_x], '<');
+          mvaddch(p[dim_y] + 1, p[dim_x], '<');
           break;
         case ter_stairs_down:
-          mvaddch(p[dim_y], p[dim_x], '>');
+          mvaddch(p[dim_y] + 1, p[dim_x], '>');
           //putchar('>');
           break;
         default:
@@ -1169,7 +1210,7 @@ void render_movement_cost_map(dungeon_t *d)
       if (p[dim_x] ==  d->pc.position[dim_x] &&
           p[dim_y] ==  d->pc.position[dim_y]) {
         //putchar('@');
-        mvaddch(p[dim_y], p[dim_x], '@');
+        mvaddch(p[dim_y] + 1, p[dim_x], '@');
       } else {
         if (hardnesspair(p) == 255) {
           printf("X");
@@ -1191,13 +1232,13 @@ void render_distance_map(dungeon_t *d)
       if (p[dim_x] ==  d->pc.position[dim_x] &&
           p[dim_y] ==  d->pc.position[dim_y]) {
         //putchar('@');
-        mvaddch(p[dim_y], p[dim_x], '@');
+        mvaddch(p[dim_y] + 1, p[dim_x], '@');
       } else {
         switch (mappair(p)) {
         case ter_wall:
         case ter_wall_immutable:
           //putchar(' ');
-          mvaddch(p[dim_y], p[dim_x], ' ');
+          mvaddch(p[dim_y] + 1, p[dim_x], ' ');
           break;
         case ter_floor:
         case ter_floor_room:
@@ -1208,16 +1249,16 @@ void render_distance_map(dungeon_t *d)
           /* Placing X for infinity */
           if (d->pc_distance[p[dim_y]][p[dim_x]] == UCHAR_MAX) {
             //putchar('X');
-            mvaddch(p[dim_y], p[dim_x], 'X');
+            mvaddch(p[dim_y] + 1, p[dim_x], 'X');
           } else {
             //putchar();
-            mvaddch(p[dim_y], p[dim_x], '0' + d->pc_distance[p[dim_y]][p[dim_x]] % 10);
+            mvaddch(p[dim_y] + 1, p[dim_x], '0' + d->pc_distance[p[dim_y]][p[dim_x]] % 10);
           }
           break;
         case ter_debug:
           fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
           //putchar('*');
-          mvaddch(p[dim_y], p[dim_x], '*');
+          mvaddch(p[dim_y] + 1, p[dim_x], '*');
           break;
         }
       }
@@ -1235,12 +1276,12 @@ void render_tunnel_distance_map(dungeon_t *d)
       if (p[dim_x] ==  d->pc.position[dim_x] &&
           p[dim_y] ==  d->pc.position[dim_y]) {
         //putchar('@');
-        mvaddch(p[dim_y], p[dim_x], '@');
+        mvaddch(p[dim_y] + 1, p[dim_x], '@');
       } else {
         switch (mappair(p)) {
         case ter_wall_immutable:
           //putchar(' ');
-          mvaddch(p[dim_y], p[dim_x], ' ');
+          mvaddch(p[dim_y] + 1, p[dim_x], ' ');
           break;
         case ter_wall:
         case ter_floor:
@@ -1252,16 +1293,16 @@ void render_tunnel_distance_map(dungeon_t *d)
           /* Placing X for infinity */
           if (d->pc_tunnel[p[dim_y]][p[dim_x]] == UCHAR_MAX) {
             //putchar('X');
-            mvaddch(p[dim_y], p[dim_x], 'X');
+            mvaddch(p[dim_y] + 1, p[dim_x], 'X');
           } else {
             //putchar();
-            mvaddch(p[dim_y], p[dim_x], '0' + d->pc_tunnel[p[dim_y]][p[dim_x]] % 10);
+            mvaddch(p[dim_y] + 1, p[dim_x], '0' + d->pc_tunnel[p[dim_y]][p[dim_x]] % 10);
           }
           break;
         case ter_debug:
           fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
           //putchar('*');
-          mvaddch(p[dim_y], p[dim_x], '*');
+          mvaddch(p[dim_y] + 1, p[dim_x], '*');
           break;
         }
       }

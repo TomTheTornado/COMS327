@@ -80,6 +80,49 @@ void gen_monsters(dungeon_t *d)
   }
 }
 
+void regen_monsters(dungeon_t *d)
+{
+  uint32_t i;
+  character_t *m;
+  uint32_t room;
+  pair_t p;
+  const static char symbol[] = "0123456789abcdef";
+
+  d->num_monsters = min(d->max_monsters, max_monster_cells(d));
+
+  for (i = 0; i < d->num_monsters; i++) {
+    m = malloc(sizeof (*m));
+    memset(m, 0, sizeof (*m));
+
+    do {
+      room = rand_range(1, d->num_rooms - 1);
+      p[dim_y] = rand_range(d->rooms[room].position[dim_y],
+                            (d->rooms[room].position[dim_y] +
+                             d->rooms[room].size[dim_y] - 1));
+      p[dim_x] = rand_range(d->rooms[room].position[dim_x],
+                            (d->rooms[room].position[dim_x] +
+                             d->rooms[room].size[dim_x] - 1));
+    } while (d->character[p[dim_y]][p[dim_x]]);
+    m->position[dim_y] = p[dim_y];
+    m->position[dim_x] = p[dim_x];
+    d->character[p[dim_y]][p[dim_x]] = m;
+    m->speed = rand_range(NPC_MIN_SPEED, NPC_MAX_SPEED);
+    m->alive = 1;
+    m->sequence_number = ++d->character_sequence_number;
+    m->pc = NULL;
+    m->npc = realloc(m->npc, sizeof (*m->npc));
+    m->npc->characteristics = rand() & 0x0000000f;
+    /*    m->npc->characteristics = 0xf;*/
+    m->symbol = symbol[m->npc->characteristics];
+    m->npc->have_seen_pc = 0;
+    m->kills[kill_direct] = m->kills[kill_avenged] = 0;
+
+    d->character[p[dim_y]][p[dim_x]] = m;
+
+    heap_insert(&d->events, new_event(d, event_character_turn, m, 0));
+  }
+}
+
 void npc_next_pos_rand_tunnel(dungeon_t *d, character_t *c, pair_t next)
 {
   pair_t n;

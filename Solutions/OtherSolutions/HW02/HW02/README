@@ -1,0 +1,26 @@
+Computer Science 327 Dungeon Crawler
+====================================
+
+About
+-----
+This project is a dungeon crawler being developed in c for CS327. Current functionality 
+includes generating a dungeon with connecting corridors and then drawing it to a terminal.
+
+Switches
+--------
+--load
+    Loads a dungeon from a save file
+--save
+    Saves a dungeon to a file
+--seed <seed> 
+    supplies a seed to the dungeon generator
+
+Compilation
+-----------
+Compilation includes running the below command in the home directory of the project:
+    make
+
+Running
+-------
+Running the program requires you to run the command:
+    make run

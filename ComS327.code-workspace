@@ -4,5 +4,20 @@
             "path": "."
         }
     ],
-    "settings": {}
+    "settings": {
+        "files.associations": {
+            "dungeon.h": "c",
+            "npc.h": "c",
+            "pc.h": "c",
+            "move.h": "c",
+            "utils.h": "c",
+            "path.h": "c",
+            "character.h": "c",
+            "event.h": "c",
+            "heap.h": "c",
+            "stdio.h": "c",
+            "unistd.h": "c",
+            "stdlib.h": "c"
+        }
+    }
 }

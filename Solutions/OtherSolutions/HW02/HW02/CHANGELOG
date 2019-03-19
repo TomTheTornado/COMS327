@@ -1,0 +1,22 @@
+CHANGELOG
+=========
+
+Version 1.01
+------------
+01/27/2019 Made a function called fill_map() to initilize the map array to specific integers.
+01/28/2019 Made a function called draw_map() to visualize the two dimensional int array in the terminal based on the numbers.
+01/28/2019 Made a function called place_rooms() that mutated the map array to randomly place rooms inside the bounds without overlapping.
+01/28/2019 Fixed a bug with the place_rooms() function that would cause an infinite loop if it was impossible to actually place another rooms.
+01/29/2019 Added a place_corridors function that connected all of the rooms together with each other.
+01/30/2019 Added hardness into the system by changing the int array into a cell struct array.
+01/30/2019 Remade the place_corridors function to take the hardness of the rock into account when generating its path.
+01/30/2019 Added placement of stairs randomly into the map where there was a hardness of 0 or open rooms.
+01/30/2019 Added placement of the player randomly into the map where there was open room.
+
+Version 1.02
+------------
+02/06/2019 Refractored the code and split it into multiple files. Applied some of the assignment 1.01 solution into my project
+02/07/2019 Created the switch logic for --load, --save and also a custom --seed switches
+02/07/2019 Created the load function and began printing values from the files
+02/08/2019 Finished the load function and started saving the dungeon.
+02/08/2019 Finished the save function and and fixed an overflow issue with a for loop applying the rooms to the terrain map

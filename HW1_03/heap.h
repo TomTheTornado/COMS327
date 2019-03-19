@@ -5,7 +5,6 @@
 extern "C" {
 # endif
 
-#include <stdint.h>
 
 struct heap_node;
 typedef struct heap_node heap_node_t;

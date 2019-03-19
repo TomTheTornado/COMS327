@@ -89,4 +89,6 @@ void render_tunnel_distance_map(dungeon_t *d);
 void render_hardness_map(dungeon_t *d);
 void render_movement_cost_map(dungeon_t *d);
 
+int regen_dungeon(dungeon_t *d);
+
 #endif

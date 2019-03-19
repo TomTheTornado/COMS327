@@ -55,3 +55,19 @@ Version 1.04
     Added nummon flag to select number of monsters
     Added load nummon to select number of monsters on loaded dungeon
     Monsters represented in hexadecimal code based off of type
+
+Version 1.05
+3/09/19
+    Switched over to using the provided 1.04 solution code
+    Added window to game
+    Changed win and lose screens
+3/10/19
+    Added player movement with input keys
+    Restricted character so it can't tunnel
+    Added quit keys
+    Added quit screen
+3/12/19
+    Added monster display list
+3/13/19
+    Added downstairs and upstairs functionality
+
