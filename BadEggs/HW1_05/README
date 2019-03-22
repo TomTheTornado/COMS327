@@ -1,0 +1,22 @@
+Assignment 1.04: Player Character and Monsters
+Thomas Powell
+
+This file will print a dungeon with monsters. I was unable to implement the
+movement by turns and the monster movement. Each monster is represented by hexadecimal based off of  their characteristics.
+For the time being the pc moves around erratically.
+
+Use "make" to compile executable dungeon.
+
+Use "./dungeon" to generate a random dungeon.
+
+Use "./dungeon --save" to save dungeon to /home/"insert_username_here"/.rlg327/dungeon
+
+Use "./dungeon --load" to load dungeon from same location.
+
+Use "./dungeon -ls" to load and save the dungeon.
+
+Use "./dungeon -lm x" to load a dungeon with 'x' amount of monsters
+
+Use "./dungeon -nummon x" to generate a dungeon with 'x' amount of monsters
+
+Use "make clean" to delete the executable dungeon file.
