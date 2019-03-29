@@ -1,8 +1,8 @@
-#include <stdlib.h>
+#include <cstdlib>
 
-#include "event.h"
-#include "character.h"
-#include "utils.h"
+#include "headers/event.h"
+#include "headers/character.h"
+#include "headers/utils.h"
 
 static uint32_t next_event_number(void)
 {

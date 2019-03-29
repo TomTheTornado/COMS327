@@ -1,19 +1,20 @@
-#include "move.h"
+#include "headers/move.h"
 
 #include <unistd.h>
-#include <stdlib.h>
-#include <assert.h>
+#include <cstdlib>
+#include <cassert>
+#include <cstdbool>
 
-#include "dungeon.h"
-#include "heap.h"
-#include "move.h"
-#include "npc.h"
-#include "pc.h"
-#include "character.h"
-#include "utils.h"
-#include "path.h"
-#include "event.h"
-#include "io.h"
+#include "headers/dungeon.h"
+#include "headers/heap.h"
+#include "headers/move.h"
+#include "headers/npc.h"
+#include "headers/pc.h"
+#include "headers/character.h"
+#include "headers/utils.h"
+#include "headers/path.h"
+#include "headers/event.h"
+#include "headers/io.h"
 
 void do_combat(dungeon_t *d, character_t *atk, character_t *def)
 {
@@ -44,11 +45,11 @@ void do_combat(dungeon_t *d, character_t *atk, character_t *def)
     (char*)"spleen",                  /* 22 */
     (char*)"ganglia",                 /* 23 */
     (char*)"ear",                     /* 24 */
-    (char*)"subcutaneous tissue",      /* 25 */
+    (char*)"subcutaneous tissue",     /* 25 */
     (char*)"cerebellum",              /* 26 */ /* Brain parts begin here */
     (char*)"hippocampus",             /* 27 */
     (char*)"frontal lobe",            /* 28 */
-    (char*)"brain"                   /* 29 */
+    (char*)"brain"                    /* 29 */
   };
   int part;
 
@@ -115,6 +116,107 @@ void move_character(dungeon_t *d, character_t *c, pair_t next)
   }
 }
 
+void fogTerrain(dungeon_t *d){
+  bool UpR, Up, UpL, R, L, DownR, Down, DownL;
+  UpR = false;
+  Up = false;
+  UpL = false;
+  R = false;
+  L = false;
+  DownR = false;
+  Down = false;
+  DownL = false;
+
+  d->pc_terrain[d->pc.position[dim_y]][d->pc.position[dim_x]] = 1;
+
+  if(d->hardness[d->pc.position[dim_y] - 1][d->pc.position[dim_x] - 1] == 0){
+    d->pc_terrain[d->pc.position[dim_y] - 1][d->pc.position[dim_x] - 1] = 1;
+    UpL = true;
+  }
+  if(d->hardness[d->pc.position[dim_y] - 1][d->pc.position[dim_x]] == 0){
+    d->pc_terrain[d->pc.position[dim_y] - 1][d->pc.position[dim_x]] = 1;
+    Up = true;
+  }
+  if(d->hardness[d->pc.position[dim_y] - 1][d->pc.position[dim_x] + 1] == 0){
+    d->pc_terrain[d->pc.position[dim_y] - 1][d->pc.position[dim_x] + 1] = 1;
+    UpR = true;
+  }
+  if(d->hardness[d->pc.position[dim_y]][d->pc.position[dim_x] - 1] == 0){
+    d->pc_terrain[d->pc.position[dim_y]][d->pc.position[dim_x] - 1] = 1;
+    L = true;
+  }
+  if(d->hardness[d->pc.position[dim_y]][d->pc.position[dim_x] + 1] == 0){
+    d->pc_terrain[d->pc.position[dim_y]][d->pc.position[dim_x] + 1] = 1;
+    R = true;
+  }
+  if(d->hardness[d->pc.position[dim_y] + 1][d->pc.position[dim_x] - 1] == 0){
+    d->pc_terrain[d->pc.position[dim_y] + 1][d->pc.position[dim_x] - 1] = 1;
+    DownL = true;
+  }
+  if(d->hardness[d->pc.position[dim_y] + 1][d->pc.position[dim_x]] == 0){
+    d->pc_terrain[d->pc.position[dim_y] + 1][d->pc.position[dim_x]] = 1;
+    Down = true;
+  }
+  if(d->hardness[d->pc.position[dim_y] + 1][d->pc.position[dim_x] + 1] == 0){
+    d->pc_terrain[d->pc.position[dim_y] + 1][d->pc.position[dim_x] + 1] = 1;
+    DownR = true;
+  }
+  //Outer ring around
+
+  //Top ring
+  if(d->hardness[d->pc.position[dim_y] - 2][d->pc.position[dim_x] - 2] == 0 && UpL){
+    d->pc_terrain[d->pc.position[dim_y] - 2][d->pc.position[dim_x] - 2] = 1;
+  }
+  if(d->hardness[d->pc.position[dim_y] - 2][d->pc.position[dim_x] - 1] == 0 && UpL && Up){
+    d->pc_terrain[d->pc.position[dim_y] - 2][d->pc.position[dim_x] - 1] = 1;
+  }
+  if(d->hardness[d->pc.position[dim_y] - 2][d->pc.position[dim_x]] == 0 && Up){
+    d->pc_terrain[d->pc.position[dim_y] - 2][d->pc.position[dim_x]] = 1;
+  }
+  if(d->hardness[d->pc.position[dim_y] - 2][d->pc.position[dim_x] + 1] == 0 && UpR && Up){
+    d->pc_terrain[d->pc.position[dim_y] - 2][d->pc.position[dim_x] + 1] = 1;
+  }
+  if(d->hardness[d->pc.position[dim_y] - 2][d->pc.position[dim_x] + 2] == 0 && UpR){
+    d->pc_terrain[d->pc.position[dim_y] - 2][d->pc.position[dim_x] + 2] = 1;
+  }
+  //Left
+  if(d->hardness[d->pc.position[dim_y] - 1][d->pc.position[dim_x] - 2] == 0 && UpL && L){
+    d->pc_terrain[d->pc.position[dim_y] - 1][d->pc.position[dim_x] - 2] = 1;
+  }
+  if(d->hardness[d->pc.position[dim_y]][d->pc.position[dim_x] - 2] == 0 && L){
+    d->pc_terrain[d->pc.position[dim_y]][d->pc.position[dim_x] - 2] = 1;
+  }
+  if(d->hardness[d->pc.position[dim_y] + 1][d->pc.position[dim_x] - 2] == 0 && DownL && L){
+    d->pc_terrain[d->pc.position[dim_y] + 1][d->pc.position[dim_x] - 2] = 1;
+  }
+  //RIght
+  if(d->hardness[d->pc.position[dim_y] - 1][d->pc.position[dim_x] + 2] == 0 && UpR && R){
+    d->pc_terrain[d->pc.position[dim_y] - 1][d->pc.position[dim_x] + 2] = 1;
+  }
+  if(d->hardness[d->pc.position[dim_y]][d->pc.position[dim_x] + 2] == 0 && R){
+    d->pc_terrain[d->pc.position[dim_y]][d->pc.position[dim_x] + 2] = 1;
+  }
+  if(d->hardness[d->pc.position[dim_y] + 1][d->pc.position[dim_x] + 2] == 0 && DownR && R){
+    d->pc_terrain[d->pc.position[dim_y] + 1][d->pc.position[dim_x] + 2] = 1;
+  }
+  //Down
+  if(d->hardness[d->pc.position[dim_y] + 2][d->pc.position[dim_x] - 2] == 0 && DownL){
+    d->pc_terrain[d->pc.position[dim_y] + 2][d->pc.position[dim_x] - 2] = 1;
+  }
+  if(d->hardness[d->pc.position[dim_y] + 2][d->pc.position[dim_x] - 1] == 0 && DownL && Down){
+    d->pc_terrain[d->pc.position[dim_y] + 2][d->pc.position[dim_x] - 1] = 1;
+  }
+  if(d->hardness[d->pc.position[dim_y] + 2][d->pc.position[dim_x]] == 0 && Down){
+    d->pc_terrain[d->pc.position[dim_y] + 2][d->pc.position[dim_x]] = 1;
+  }
+  if(d->hardness[d->pc.position[dim_y] + 2][d->pc.position[dim_x] + 1] == 0 && DownR && Down){
+    d->pc_terrain[d->pc.position[dim_y] + 2][d->pc.position[dim_x] + 1] = 1;
+  }
+  if(d->hardness[d->pc.position[dim_y] + 2][d->pc.position[dim_x] + 2] == 0 && DownR){
+    d->pc_terrain[d->pc.position[dim_y] + 2][d->pc.position[dim_x] + 2] = 1;
+  }
+}
+
 void do_moves(dungeon_t *d)
 {
   pair_t next;
@@ -166,8 +268,21 @@ void do_moves(dungeon_t *d)
 
     heap_insert(&d->events, update_event(d, e, 1000 / c->speed));
   }
+  if(!pc_is_alive(d)){
+    d->fog = 0;
+  }
 
-  io_display(d);
+  //fog of war
+  fogTerrain(d);
+  
+  //if fog of war false: print regular
+  if(d->fog){
+    io_displayFog(d);
+  }
+  else{
+    io_display(d); //prints the map
+  }
+  //else: print fog of war
   if (pc_is_alive(d) && e->c == &d->pc) {
     c = e->c;
     d->time = e->time;
@@ -176,7 +291,7 @@ void do_moves(dungeon_t *d)
      * and recreated every time we leave and re-enter this function.    */
     e->c = NULL;
     event_delete(e);
-    io_handle_input(d);
+    io_handle_input(d); //reads input
   }
 }
 
@@ -314,7 +429,12 @@ uint32_t move_pc(dungeon_t *d, uint32_t dir)
   } else if (mappair(next) < ter_floor) {
     io_queue_message(wallmsg[rand() % (sizeof (wallmsg) /
                                        sizeof (wallmsg[0]))]);
-    io_display(d);
+    if(d->fog){
+    io_displayFog(d);
+    }
+    else{
+      io_display(d); //prints the map
+    }
   }
 
   return 1;

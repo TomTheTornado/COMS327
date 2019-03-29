@@ -1,8 +1,8 @@
-#include <stdlib.h>
+#include <cstdlib>
 
-#include "path.h"
-#include "dungeon.h"
-#include "utils.h"
+#include "headers/path.h"
+#include "headers/dungeon.h"
+#include "headers/utils.h"
 
 /* Ugly hack: There is no way to pass a pointer to the dungeon into the *
  * heap's comparitor funtion without modifying the heap.  Copying the   *
@@ -14,7 +14,8 @@
  * is ugly.                                                             */
 static dungeon_t *dungeon;
 
-typedef struct path {
+typedef class path {
+public:
   heap_node_t *hn;
   uint8_t pos[2];
 } path_t;

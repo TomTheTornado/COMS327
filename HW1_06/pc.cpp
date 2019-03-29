@@ -1,12 +1,12 @@
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "string.h"
 
-#include "dungeon.h"
-#include "pc.h"
-#include "utils.h"
-#include "move.h"
-#include "path.h"
+#include "headers/dungeon.h"
+#include "headers/pc.h"
+#include "headers/utils.h"
+#include "headers/move.h"
+#include "headers/path.h"
 
 void pc_delete(pc_t *pc)
 {

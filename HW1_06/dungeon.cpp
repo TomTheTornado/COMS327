@@ -1,26 +1,27 @@
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdint>
+#include <cstdlib>
+#include <cstring>
 #include <endian.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <limits.h>
 #include <sys/time.h>
-#include <assert.h>
-#include <errno.h>
+#include <cassert>
+#include <cerrno>
 
-#include "heap.h"
-#include "dungeon.h"
-#include "utils.h"
-#include "event.h"
-#include "pc.h"
-#include "npc.h"
-#include "io.h"
+#include "headers/heap.h"
+#include "headers/dungeon.h"
+#include "headers/utils.h"
+#include "headers/event.h"
+#include "headers/pc.h"
+#include "headers/npc.h"
+#include "headers/io.h"
 
 #define DUMP_HARDNESS_IMAGES 0
 
-typedef struct corridor_path {
+typedef class corridor_path {
+public:
   heap_node_t *hn;
   uint8_t pos[2];
   uint8_t from[2];
@@ -347,9 +348,10 @@ int gaussian[5][5] = {
   {  1,  4,  7,  4,  1 }
 };
 
-typedef struct queue_node {
+typedef class queue_node {
+public:
   int x, y;
-  struct queue_node *next;
+  class queue_node *next;
 } queue_node_t;
 
 static int smooth_hardness(dungeon_t *d)
@@ -518,6 +520,7 @@ static int empty_dungeon(dungeon_t *d)
   smooth_hardness(d);
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
+      d->pc_terrain[y][x] = 0;
       mapxy(x, y) = ter_wall;
       if (y == 0 || y == DUNGEON_Y - 1 ||
           x == 0 || x == DUNGEON_X - 1) {
@@ -972,7 +975,7 @@ int read_dungeon(dungeon_t *d, char *file)
   char *home;
   size_t len;
   char *filename;
-  struct stat buf;
+  class stat buf;
 
   if (!file) {
     if (!(home = getenv("HOME"))) {

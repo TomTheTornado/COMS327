@@ -1,14 +1,14 @@
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
-#include "utils.h"
-#include "npc.h"
-#include "dungeon.h"
-#include "character.h"
-#include "move.h"
-#include "path.h"
-#include "event.h"
-#include "pc.h"
+#include "headers/utils.h"
+#include "headers/npc.h"
+#include "headers/dungeon.h"
+#include "headers/character.h"
+#include "headers/move.h"
+#include "headers/path.h"
+#include "headers/event.h"
+#include "headers/pc.h"
 
 void npc_delete(npc_t *n)
 {

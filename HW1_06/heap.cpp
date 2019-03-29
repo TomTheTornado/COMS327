@@ -1,11 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cassert>
 
-#include "heap.h"
+#include "headers/heap.h"
 
-struct heap_node {
+class heap_node {
+public:
   heap_node_t *next;
   heap_node_t *prev;
   heap_node_t *parent;
