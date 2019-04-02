@@ -3,12 +3,12 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-#include "io.h"
-#include "move.h"
-#include "path.h"
-#include "pc.h"
-#include "utils.h"
-#include "dungeon.h"
+#include "headers/io.h"
+#include "headers/move.h"
+#include "headers/path.h"
+#include "headers/pc.h"
+#include "headers/utils.h"
+#include "headers/dungeon.h"
 
 /* Same ugly hack we did in path.c */
 static dungeon *thedungeon;
@@ -710,6 +710,7 @@ void io_handle_input(dungeon *d)
       fail_code = move_pc(d, '<');
       break;
     case 'Q':
+    case 'q':
       d->quit = 1;
       fail_code = 0;
       break;
@@ -750,27 +751,27 @@ void io_handle_input(dungeon *d)
       io_list_monsters(d);
       fail_code = 1;
       break;
-    case 'q':
-      /* Demonstrate use of the message queue.  You can use this for *
-       * printf()-style debugging (though gdb is probably a better   *
-       * option.  Not that it matterrs, but using this command will  *
-       * waste a turn.  Set fail_code to 1 and you should be able to *
-       * figure out why I did it that way.                           */
-      io_queue_message("This is the first message.");
-      io_queue_message("Since there are multiple messages, "
-                       "you will see \"more\" prompts.");
-      io_queue_message("You can use any key to advance through messages.");
-      io_queue_message("Normal gameplay will not resume until the queue "
-                       "is empty.");
-      io_queue_message("Long lines will be truncated, not wrapped.");
-      io_queue_message("io_queue_message() is variadic and handles "
-                       "all printf() conversion specifiers.");
-      io_queue_message("Did you see %s?", "what I did there");
-      io_queue_message("When the last message is displayed, there will "
-                       "be no \"more\" prompt.");
-      io_queue_message("Have fun!  And happy printing!");
-      fail_code = 0;
-      break;
+    // case 'q':
+    //   /* Demonstrate use of the message queue.  You can use this for *
+    //    * printf()-style debugging (though gdb is probably a better   *
+    //    * option.  Not that it matterrs, but using this command will  *
+    //    * waste a turn.  Set fail_code to 1 and you should be able to *
+    //    * figure out why I did it that way.                           */
+    //   io_queue_message("This is the first message.");
+    //   io_queue_message("Since there are multiple messages, "
+    //                    "you will see \"more\" prompts.");
+    //   io_queue_message("You can use any key to advance through messages.");
+    //   io_queue_message("Normal gameplay will not resume until the queue "
+    //                    "is empty.");
+    //   io_queue_message("Long lines will be truncated, not wrapped.");
+    //   io_queue_message("io_queue_message() is variadic and handles "
+    //                    "all printf() conversion specifiers.");
+    //   io_queue_message("Did you see %s?", "what I did there");
+    //   io_queue_message("When the last message is displayed, there will "
+    //                    "be no \"more\" prompt.");
+    //   io_queue_message("Have fun!  And happy printing!");
+    //   fail_code = 0;
+    //   break;
     default:
       /* Also not in the spec.  It's not always easy to figure out what *
        * key code corresponds with a given keystroke.  Print out any    *

@@ -17,7 +17,9 @@
             "heap.h": "c",
             "stdio.h": "c",
             "unistd.h": "c",
-            "stdlib.h": "c"
+            "stdlib.h": "c",
+            "iostream": "cpp",
+            "string": "c"
         }
     }
 }

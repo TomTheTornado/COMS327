@@ -4,6 +4,9 @@
 # include "heap.h"
 # include "dims.h"
 # include "character.h"
+#include <iostream>
+#include <string>
+using namespace std; 
 
 #define DUNGEON_X              80
 #define DUNGEON_Y              21
@@ -81,6 +84,9 @@ class dungeon {
   uint32_t time;
   uint32_t is_new;
   uint32_t quit;
+  uint16_t parseThing;
+  uint32_t monTypes;
+  uint32_t objTypes;
 };
 
 void init_dungeon(dungeon *d);
@@ -93,5 +99,6 @@ int read_dungeon(dungeon *d, char *file);
 int read_pgm(dungeon *d, char *pgm);
 void render_distance_map(dungeon *d);
 void render_tunnel_distance_map(dungeon *d);
+
 
 #endif

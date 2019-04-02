@@ -4,71 +4,117 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "dungeon.h"
-#include "pc.h"
-#include "npc.h"
-#include "move.h"
-#include "utils.h"
-#include "io.h"
+#include "headers/dungeon.h"
+#include "headers/pc.h"
+#include "headers/npc.h"
+#include "headers/move.h"
+#include "headers/utils.h"
+#include "headers/io.h"
+#include "headers/parse.h"
 
-const char *victory =
-  "\n                                       o\n"
-  "                                      $\"\"$o\n"
-  "                                     $\"  $$\n"
-  "                                      $$$$\n"
-  "                                      o \"$o\n"
-  "                                     o\"  \"$\n"
-  "                oo\"$$$\"  oo$\"$ooo   o$    \"$    ooo\"$oo  $$$\"o\n"
-  "   o o o o    oo\"  o\"      \"o    $$o$\"     o o$\"\"  o$      \"$  "
-  "\"oo   o o o o\n"
-  "   \"$o   \"\"$$$\"   $$         $      \"   o   \"\"    o\"         $"
-  "   \"o$$\"    o$$\n"
-  "     \"\"o       o  $          $\"       $$$$$       o          $  ooo"
-  "     o\"\"\n"
-  "        \"o   $$$$o $o       o$        $$$$$\"       $o        \" $$$$"
-  "   o\"\n"
-  "         \"\"o $$$$o  oo o  o$\"         $$$$$\"        \"o o o o\"  "
-  "\"$$$  $\n"
-  "           \"\" \"$\"     \"\"\"\"\"            \"\"$\"            \""
-  "\"\"      \"\"\" \"\n"
-  "            \"oooooooooooooooooooooooooooooooooooooooooooooooooooooo$\n"
-  "             \"$$$$\"$$$$\" $$$$$$$\"$$$$$$ \" \"$$$$$\"$$$$$$\"  $$$\""
-  "\"$$$$\n"
-  "              $$$oo$$$$   $$$$$$o$$$$$$o\" $$$$$$$$$$$$$$ o$$$$o$$$\"\n"
-  "              $\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\""
-  "\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"$\n"
-  "              $\"                                                 \"$\n"
-  "              $\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\""
-  "$\"$\"$\"$\"$\"$\"$\"$\n"
-  "                                   You win!\n\n";
+const char *triumph =
+  "\n"
+  "                ,:/+/-                              ##   ###   ##       \n"
+  "                /M/              .,-=;@/;-          ##   ###   ##       \n"
+  "           .:/= ;MH/,    ,=/+&$XH@MM#@:             ##   ###   ##       \n"
+  "          -$##@+$###@H@MMM#######H:.    -/H#        ##   ###   ##       \n"
+  "     .,H@H@ X######@ -H#####@+-     -+H###@X        '## ##'## ##'       \n"
+  "      .,@##H;      +XM##M/,     =&@###@X;-           '###' '###'        \n"
+  "    X&-  :M##########$.    .:&M###@&:                                   \n"
+  "    M##H,   +H@@@$/-.  ,;$M###@&,          -        #############       \n"
+  "    M####M=,,---,.-%%H####M$:          ,+@##             ###            \n"
+  "    @##################@/.         :&H##@$-              ###            \n"
+  "    M###############H,         ;HM##M$=                  ###            \n"
+  "    #################.    .=$M##M$=                      ###            \n"
+  "    ################H..;XM##M$=          .:+        #############       \n"
+  "    M###################@&=           =+@MH&                            \n"
+  "    @#################M/.         =+H#X&=              ###   ##         \n"
+  "    =+M###############M,      ,/X#H+:,                 ####  ##         \n"
+  "      .;XM###########H=   ,/X#H+:;                     ##### ##         \n"
+  "        .=+HM#######M+/+HM@+=.                         ## #####         \n"
+  "            ,:/%XM####H/.                              ##  ####         \n"
+  "                  ,.:=-.                               ##   ###         \n"
+  "                                   You win!\n";
 
-const char *tombstone =
-  "\n\n\n\n                /\"\"\"\"\"/\"\"\"\"\"\"\".\n"
-  "               /     /         \\             __\n"
-  "              /     /           \\            ||\n"
-  "             /____ /   Rest in   \\           ||\n"
-  "            |     |    Pieces     |          ||\n"
-  "            |     |               |          ||\n"
-  "            |     |   A. Luser    |          ||\n"
-  "            |     |               |          ||\n"
-  "            |     |     * *   * * |         _||_\n"
-  "            |     |     *\\/* *\\/* |        | TT |\n"
-  "            |     |     *_\\_  /   ...\"\"\"\"\"\"| |"
-  "| |.\"\"....\"\"\"\"\"\"\"\".\"\"\n"
-  "            |     |         \\/..\"\"\"\"\"...\"\"\""
-  "\\ || /.\"\"\".......\"\"\"\"...\n"
-  "            |     |....\"\"\"\"\"\"\"........\"\"\"\"\""
-  "\"^^^^\".......\"\"\"\"\"\"\"\"..\"\n"
-  "            |......\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"......"
-  "..\"\"\"\"\"....\"\"\"\"\"..\"\"...\"\"\".\n\n"
-  "            You're dead.  Better luck in the next life.\n\n\n";
+const char *ganon =
+  "\n"
+  "                                GAME OVER\n"
+  "                             RETURN OF GANON\n"
+  "                      (&,                     ,/&)\n"
+  "                       #@@@@*.             *&@@@)\n"
+  "                        *@@@@@.,&&@@@@@%*.%@@@&\n"
+  "                          .*&@@@@@@@@&(&&@@&#.\n"
+  "                             .(%#   %&&   @@)*\n"
+  "                  ,,**&&%%/%%@@@@%%@//\\&@@@@&&)/(&&/&,\n"   
+  "               *&@@@@@#@&/@@@@@@@@//'@@'\\@@@@@@@)@#&@@@@&*\n"
+  "           .,*#@@@@@@@@@(@@@@@@@@//'@@@@'\\@@@@@@@)@@@@@@@@\\.\n"
+  "          *@@@@@@@@@@@@@(@@@@@@@@@@@@@@@@@@@@@@@/@@@@@@@@@@@\\,\n"
+  "         (@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\\,\n"
+  "        /@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\\\n"
+  "       /@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@).\n"
+  "      /@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\\,\n"
+  "    *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\\,\n"
+  "   (@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@),\n"
+  "  /@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@),\n"
+  " /@@@@@@@@@@@@/@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \\@@@@@@@@@@).\n"
+  ",)@@@@@@@@@@/' @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \\@@@@@@@@@@(\n"  
+  "               You're dead.  Better luck in the next life.\n";
+
+  const char *quitRLG =
+  "\n"
+  "                                                                                \n"
+  "                                                                                \n"
+  "                                                                                \n"
+  " ,ggg,         gg                                                               \n"  
+  "dP''Y8a        88                                                           I8  \n"
+  "Yb, `88        88                                                           I8  \n" 
+  " `'  88        88                                                    gg  8888888\n"
+  "     88        88                                                    ''     I8  \n"
+  "     88        88    ,ggggg, gg      gg       ,gggg,gg  gg      gg   gg     I8  \n" 
+  "     88       ,88   dP'  'Y8gI8      8I      dP'  'Y8I  I8      8I   88     I8  \n" 
+  "     Y8b,   ,d888  i8'    ,8II8,    ,8I     i8'    ,8I  I8,    ,8I   88    ,I8, \n"
+  "      'Y88888P'88,,d8,   ,d8'd8b,  ,d8b,   ,d8,   ,d8b ,d8b,  ,d8b, ,88,  ,d88b,\n"
+  "           ,ad8888P'Y8888P' 8P''Y88P'`Y8   P'Y8888P'88d8P''Y88P'`Y88P''Y888P''Y8\n"
+  "          d8P' 88                                   I8P                         \n"
+  "        ,d8'   88                                   I8'                         \n"
+  "        d8'    88                                   I8                          \n"
+  "        88     88                                   I8                          \n"
+  "        Y8,   ,88                                   I8                          \n"
+  "         'Y888P'                                    I8                          \n"
+  "                                                                                \n"
+  "                                                                                \n";
+
+  const char *batman = 
+  "\n"
+	"          .  .                 BATMAN SAYS:\n"
+	"          |\\_|\\\n"
+	"          | a_a\\    ~DONT PLAY THE RLG327 GAME WITH\n"
+	"          | | \"]        NO MONSTERS, IT DEFEATS\n"
+	"      ____| \'-\\___          THE PURPOSE!\n"
+	"     /.----.___.-\'\\\n"
+	"    //        _    \\\n"
+	"   //   .-. (~v~) /|\n"
+	"  |\'|  /\\:  .--  / \\\n"
+	" // |-/  \\_/____/\\/~|\n"
+	"|/  \\ |  []_|_|_] \\ |\n"
+	"| \\  | \\ |___   _\\ ]_}\n"
+	"| |  \'-\' /   \'.\'  |\n"
+	"| |     /    /|:  | \n"
+	"| |     |   / |:  /\\\n"
+	"| |     /  /  |  /  \\\n"
+	"| |    |  /  /  |    \\\n"
+	"\\ |    |/\\/  |/|/\\    \\\n"
+	" \\|\\ |\\|  |  | / /\\/\\__\\\n"
+	"  \\ \\| | /   | |__\n"
+	"       / |   |____)\n"
+	"       |_/\n";
 
 void usage(char *name)
 {
   fprintf(stderr,
           "Usage: %s [-r|--rand <seed>] [-l|--load [<file>]]\n"
           "          [-s|--save [<file>]] [-i|--image <pgm file>]\n"
-          "          [-n|--nummon <count>]\n",
+          "          [-n|--nummon <count>] [-p|--parse <0 or 1>\n",
           name);
 
   exit(-1);
@@ -85,6 +131,9 @@ int main(int argc, char *argv[])
   char *save_file;
   char *load_file;
   char *pgm_file;
+  uint32_t parseMon = 0;
+  uint32_t parseItem = 0;
+  uint32_t parseFail = 0;
   
   /* Quiet a false positive from valgrind. */
   memset(&d, 0, sizeof (d));
@@ -118,7 +167,7 @@ int main(int argc, char *argv[])
           long_arg = 1; /* handle long and short args at the same place.  */
         }
         switch (argv[i][1]) {
-        case 'n':
+        case 'n':  //NUM MONSTERS
           if ((!long_arg && argv[i][2]) ||
               (long_arg && strcmp(argv[i], "-nummon")) ||
               argc < ++i + 1 /* No more arguments */ ||
@@ -126,7 +175,7 @@ int main(int argc, char *argv[])
             usage(argv[0]);
           }
           break;
-        case 'r':
+        case 'r':  //SEED
           if ((!long_arg && argv[i][2]) ||
               (long_arg && strcmp(argv[i], "-rand")) ||
               argc < ++i + 1 /* No more arguments */ ||
@@ -135,7 +184,7 @@ int main(int argc, char *argv[])
           }
           do_seed = 0;
           break;
-        case 'l':
+        case 'l':  //LOAD
           if ((!long_arg && argv[i][2]) ||
               (long_arg && strcmp(argv[i], "-load"))) {
             usage(argv[0]);
@@ -147,7 +196,25 @@ int main(int argc, char *argv[])
             load_file = argv[++i];
           }
           break;
-        case 's':
+        case 'p': //PARSE MONSTERS OR ITEMS
+          if ((!long_arg && argv[i][2]) ||
+              (long_arg && strcmp(argv[i], "-parse")) ||
+              argc < ++i + 1 /* No more arguments */ ||
+              !sscanf(argv[i], "%hu", &d.parseThing)) {
+            usage(argv[0]);
+          }
+          d.max_monsters = 0;
+          if(d.parseThing == 0){
+            parseMon = 1;
+          }
+          else if(d.parseThing == 1){
+            parseItem = 1;
+          }
+          else{
+            parseFail = 1;
+          }
+          break;
+        case 's':  //SAVE
           if ((!long_arg && argv[i][2]) ||
               (long_arg && strcmp(argv[i], "-save"))) {
             usage(argv[0]);
@@ -210,6 +277,7 @@ int main(int argc, char *argv[])
     gen_dungeon(&d);
   }
 
+
   /* Ignoring PC position in saved dungeons.  Not a bug. */
   config_pc(&d);
   gen_monsters(&d);
@@ -249,11 +317,37 @@ int main(int argc, char *argv[])
     }
   }
 
-  printf("%s", pc_is_alive(&d) ? victory : tombstone);
-  printf("You defended your life in the face of %u deadly beasts.\n"
+  if(d.PC->kills[kill_direct] == 1 && d.max_monsters == 1){
+    printf("%s", triumph);
+    printf("You defended your life in the face of %u deadly beasts.\n"
          "You avenged the cruel and untimely murders of %u "
          "peaceful dungeon residents.\n",
          d.PC->kills[kill_direct], d.PC->kills[kill_avenged]);
+  }
+  else if(parseFail == 1){
+    printf("%s", "Sorry, I didn't understand what you wanted to parse.\n");
+  }
+  else if(d.max_monsters == 0 && parseMon == 0 && parseItem == 0){
+    printf("%s", batman);
+  }
+  else if(parseMon == 1){
+    read_monsters(&d);
+  }
+  else if(parseItem == 1){
+    read_objects(&d);
+  }
+  else if(pc_is_alive(&d) && (&d.num_monsters > 0)){
+    printf("%s", quitRLG);
+  }
+  else{
+    printf("%s", pc_is_alive(&d) ? triumph : ganon);
+    printf("You defended your life in the face of %u deadly beasts.\n"
+         "You avenged the cruel and untimely murders of %u "
+         "peaceful dungeon residents.\n",
+         d.PC->kills[kill_direct], d.PC->kills[kill_avenged]);
+
+  }
+
 
   if (pc_is_alive(&d)) {
     /* If the PC is dead, it's in the move heap and will get automatically *

@@ -1,19 +1,19 @@
-#include "move.h"
+#include "headers/move.h"
 
 #include <unistd.h>
 #include <stdlib.h>
 #include <assert.h>
 
-#include "dungeon.h"
-#include "heap.h"
-#include "move.h"
-#include "npc.h"
-#include "pc.h"
-#include "character.h"
-#include "utils.h"
-#include "path.h"
-#include "event.h"
-#include "io.h"
+#include "headers/dungeon.h"
+#include "headers/heap.h"
+#include "headers/move.h"
+#include "headers/npc.h"
+#include "headers/pc.h"
+#include "headers/character.h"
+#include "headers/utils.h"
+#include "headers/path.h"
+#include "headers/event.h"
+#include "headers/io.h"
 
 void do_combat(dungeon *d, character *atk, character *def)
 {

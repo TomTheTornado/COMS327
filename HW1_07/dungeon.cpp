@@ -9,14 +9,19 @@
 #include <sys/time.h>
 #include <assert.h>
 #include <errno.h>
+#include <iostream>
+#include <fstream>
 
-#include "heap.h"
-#include "dungeon.h"
-#include "utils.h"
-#include "event.h"
-#include "pc.h"
-#include "npc.h"
-#include "io.h"
+using namespace std;
+
+#include "headers/heap.h"
+#include "headers/dungeon.h"
+#include "headers/utils.h"
+#include "headers/event.h"
+#include "headers/pc.h"
+#include "headers/npc.h"
+#include "headers/io.h"
+#include "headers/parse.h"
 
 #define DUMP_HARDNESS_IMAGES 0
 
@@ -1273,3 +1278,5 @@ void new_dungeon(dungeon *d)
 
   gen_monsters(d);
 }
+
+

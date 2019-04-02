@@ -1,0 +1,22 @@
+Assignment 1.07: Parsing Monsters
+Thomas Powell
+
+This file will print a dungeon with monsters. Move with the 1-9 keys or
+    the vim keys. Use q to quit. Use m to open the monster list with up and down arrow
+    keys to scroll; ESC to exit. The monster list shows the locations relative to the player. 
+    Use 'f' to toggle "fog of war". Use 't' to initiate teleport, then 'r' to teleport randomly 
+    or 't' again to teleport '*'. Monsters will not be rendered unless in sight of the player.
+    
+Use "make rlg327" to compile executable dungeon.
+
+Use "./rlg327" to generate a random dungeon.
+
+Use "./rlg327 --save" to save dungeon to /home/"insert_username_here"/.rlg327/dungeon   (-s)
+
+Use "./rlg327 --load" to load dungeon from same location.                               (-l)
+
+Use "./rlg327 --nummon x" to generate a dungeon with 'x' amount of monsters             (-n)
+
+Use "./rlg327 --parse x" to print the parsed monsters or objects. Where 'x' is '0'(monsters) or '1'(objects). (-p)
+
+Use "make clean" to delete the generated files.

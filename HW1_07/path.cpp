@@ -1,9 +1,9 @@
 #include <stdlib.h>
 
-#include "path.h"
-#include "dungeon.h"
-#include "utils.h"
-#include "pc.h"
+#include "headers/path.h"
+#include "headers/dungeon.h"
+#include "headers/utils.h"
+#include "headers/pc.h"
 
 /* Ugly hack: There is no way to pass a pointer to the dungeon into the *
  * heap's comparitor funtion without modifying the heap.  Copying the   *
