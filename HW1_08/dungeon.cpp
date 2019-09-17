@@ -10,13 +10,13 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "headers/heap.h"
-#include "headers/dungeon.h"
-#include "headers/utils.h"
-#include "headers/event.h"
-#include "headers/pc.h"
-#include "headers/npc.h"
-#include "headers/io.h"
+#include "heap.h"
+#include "dungeon.h"
+#include "utils.h"
+#include "event.h"
+#include "pc.h"
+#include "npc.h"
+#include "io.h"
 
 #define DUMP_HARDNESS_IMAGES 0
 
@@ -1272,4 +1272,5 @@ void new_dungeon(dungeon *d)
   d->character_map[d->PC->position[dim_y]][d->PC->position[dim_x]] = d->PC;
 
   gen_monsters(d);
+  //gen_objects(d);
 }

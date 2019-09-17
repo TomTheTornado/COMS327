@@ -1,14 +1,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "headers/utils.h"
-#include "headers/npc.h"
-#include "headers/dungeon.h"
-#include "headers/character.h"
-#include "headers/move.h"
-#include "headers/path.h"
-#include "headers/event.h"
-#include "headers/pc.h"
+#include "utils.h"
+#include "npc.h"
+#include "dungeon.h"
+#include "character.h"
+#include "move.h"
+#include "path.h"
+#include "event.h"
+#include "pc.h"
 
 static uint32_t max_monster_cells(dungeon *d)
 {
@@ -36,10 +36,10 @@ void gen_monsters(dungeon *d)
   npc *m;
   uint32_t room;
   pair_t p;
-  const static char symbol[] = "0123456789abcdef";
+  //const static char symbol[] = "0123456789abcdef";
 
   d->num_monsters = min(d->max_monsters, max_monster_cells(d));
-
+  uint32_t monType, monSuccess;
   for (i = 0; i < d->num_monsters; i++) {
     m = new npc;
     memset(m, 0, sizeof (*m));
@@ -56,12 +56,21 @@ void gen_monsters(dungeon *d)
     m->position[dim_y] = p[dim_y];
     m->position[dim_x] = p[dim_x];
     d->character_map[p[dim_y]][p[dim_x]] = m;
-    m->speed = rand_range(5, 20);
+    m->speed = rand_range(5, 20);                 ///TODO
     m->alive = 1;
     m->sequence_number = ++d->character_sequence_number;
-    m->characteristics = rand() & 0x0000000f;
+    while(1){
+      monType = rand() % 20;
+      monSuccess = rand() % 100 + 1;
+      if(monSuccess <= d->monster_descriptions[monType].rarity){
+        break;
+      }
+    }
+    m->monType = monType;
+    //m->characteristics = rand() & 0x0000000f;
+    m->characteristics = d->monster_descriptions[monType].abilities & 0x0000000f;
     /*    m->npc->characteristics = 0xf;*/
-    m->symbol = symbol[m->characteristics];
+    m->symbol = d->monster_descriptions[monType].symbol;
     m->have_seen_pc = 0;
     m->kills[kill_direct] = m->kills[kill_avenged] = 0;
 
@@ -70,6 +79,103 @@ void gen_monsters(dungeon *d)
     heap_insert(&d->events, new_event(d, event_character_turn, m, 0));
   }
 }
+
+// void obj_type(dungeon *d){
+//   uint32_t i;
+//   i = 0;
+//   while(i < 10){
+//     if(d->artifacts[i].type == objtype_no_type){d->artifacts[i].symbol = '*';}
+//     else if(d->artifacts[i].type == objtype_WEAPON){d->artifacts[i].symbol = '|';}
+//     else if(d->artifacts[i].type == objtype_OFFHAND){d->artifacts[i].symbol = ')';}
+//     else if(d->artifacts[i].type == objtype_RANGED){d->artifacts[i].symbol = '}';}
+//     else if(d->artifacts[i].type == objtype_LIGHT){d->artifacts[i].symbol = '_';}
+//     else if(d->artifacts[i].type == objtype_ARMOR){d->artifacts[i].symbol = '[';}
+//     else if(d->artifacts[i].type == objtype_HELMET){d->artifacts[i].symbol = ']';}
+//     else if(d->artifacts[i].type == objtype_CLOAK){d->artifacts[i].symbol = '(';}
+//     else if(d->artifacts[i].type == objtype_GLOVES){d->artifacts[i].symbol = '{';}
+//     else if(d->artifacts[i].type == objtype_BOOTS){d->artifacts[i].symbol = '\\';}
+//     else if(d->artifacts[i].type == objtype_AMULET){d->artifacts[i].symbol = '"';}
+//     else if(d->artifacts[i].type == objtype_RING){d->artifacts[i].symbol = '=';}
+//     else if(d->artifacts[i].type == objtype_SCROLL){d->artifacts[i].symbol = '~';}
+//     else if(d->artifacts[i].type == objtype_BOOK){d->artifacts[i].symbol = '?';}
+//     else if(d->artifacts[i].type == objtype_FLASK){d->artifacts[i].symbol = '!';}
+//     else if(d->artifacts[i].type == objtype_GOLD){d->artifacts[i].symbol = '$';}
+//     else if(d->artifacts[i].type == objtype_AMMUNITION){d->artifacts[i].symbol = '/';}
+//     else if(d->artifacts[i].type == objtype_FOOD){d->artifacts[i].symbol = ',';}
+//     else if(d->artifacts[i].type == objtype_WAND){d->artifacts[i].symbol = '-';}
+//     else if(d->artifacts[i].type == objtype_CONTAINER){d->artifacts[i].symbol = '%';}
+//     else{d->artifacts[i].symbol = '*';}
+//     i++;
+//   }
+
+// }
+
+// void gen_objects(dungeon *d){
+//   std::cout << "hjkhl";
+//   // std::cout << '\n' << "objects";
+//   uint32_t i;
+//   // // object *o;
+//   // //uint32_t room;
+//   pair_t p;
+//   // //const static char symbol[] = "0123456789abcdef";
+
+//   // //d->num_monsters = min(d->max_monsters, max_monster_cells(d));
+//   uint32_t numObjects;
+//   numObjects = 10;
+//   uint32_t objType, objSuccess;
+//   for (i = 0; i < numObjects; i++) {
+//   //   std::cout << i << '\n';
+//   //   //o = new object;
+//   //   //memset(o, 0, sizeof (*o));
+    
+//   //   // do {
+
+//   //   //   room = rand_range(1, d->num_rooms - 1);
+//   //   //   p[dim_y] = rand_range(d->rooms[room].position[dim_y],
+//   //   //                         (d->rooms[room].position[dim_y] +
+//   //   //                          d->rooms[room].size[dim_y] - 1));
+//   //   //   p[dim_x] = rand_range(d->rooms[room].position[dim_x],
+//   //   //                         (d->rooms[room].position[dim_x] +
+//   //   //                          d->rooms[room].size[dim_x] - 1));
+//   //   // } while (d->character_map[p[dim_y]][p[dim_x]]);      //TODO -only 1 in existence
+    
+//   //   //o->position[dim_y] = p[dim_y];
+//     while(1){
+//       p[dim_x] = rand() % (DUNGEON_X - 1) + 1;
+//       p[dim_y] = rand() % (DUNGEON_Y - 1) + 1;
+//       if(d->hardness[p[dim_y]][p[dim_x]] == ter_floor){
+//         d->artifacts[i].position[dim_y] = p[dim_y];
+//         d->artifacts[i].position[dim_x] = p[dim_x];
+//         break;
+//       }
+//     }
+//   //   //o->position[dim_x] = p[dim_x];
+//   //   //d->object_map[p[dim_y]][p[dim_x]] = o;               
+
+//     while(1){
+//       objType = rand() % 20;
+//       objSuccess = rand() % 100 + 1;
+//       if(objSuccess <= d->object_descriptions[objType].rarity){
+//         break;
+//       }
+//     }
+    
+//     d->object_map[p[dim_y]][p[dim_x]] = 1;
+//   //   //d->object_map[p[dim_y]][p[dim_x]] = objType;
+
+//     d->artifacts[i].objNum = objType;
+
+//   //   //m->characteristics = rand() & 0x0000000f;
+//   //   /*    m->npc->characteristics = 0xf;*/
+//   //   //o->type = d->object_descriptions[objType].type;
+//   //   //obj_type(o);
+
+//   //   //d->object_map[p[dim_y]][p[dim_x]] = o;
+
+
+//   }
+//   obj_type(d);
+// }
 
 void npc_next_pos_rand_tunnel(dungeon *d, npc *c, pair_t next)
 {

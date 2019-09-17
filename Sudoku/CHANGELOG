@@ -1,0 +1,25 @@
+Assignment 2: Sudoku
+Thomas Powell
+
+4/12/19
+    Created the gameboard for Sudoku
+4/13/19
+    Game runs in window using ncurses
+    Game creates a Sudoku solution
+4/14/19
+    Added difficulty for the game
+4/19/19
+    Added quit prompt
+    Added win screen
+4/22/19
+    Added cursor
+4/23/19
+    Added gameplay for inserting numbers
+    Checks for a win
+4/24/19
+    Added more options
+    Can view solution
+    Can view incorrect numbers
+4/26/19
+    Can now highlight specific numbers
+

@@ -1,0 +1,26 @@
+Assignment 2:Sudoku
+Thomas Powell
+
+After getting into the directory use "make sudoku" to make the file.
+Use "./sudoku" to run the game. Use "make clean" to delete the generated files.
+
+This file will play a sudoku game. 
+
+DIFFICULTY SCREEN
+-Use 'w' and 's' to select the difficulty. 
+-Use 'e' to choose the difficulty.
+
+GAME SCREEN
+-Hints squares are unable to be changed and shown in green.
+-Move to the square you want to change with numpad or vim keys - cursor shown in magenta. 
+-Use 'e' to enter in a number 1-9.
+-Use 'a' and 'd' to highlight specific numbers shown in blue.
+-Use 'q' to quit.
+-Use 'w' for more options.
+
+MORE OPTIONS SCREEN
+-Use 's' to view solution.
+-Use 'a' to view incorrect answers shown in red.
+-ESC key to get back to game screen.
+
+The game will check and return a win after every move.

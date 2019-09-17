@@ -9,12 +9,12 @@
 #include <sstream>
 #include <cstdlib>
 
-#include "headers/descriptions.h"
-#include "headers/dungeon.h"
-#include "headers/npc.h"
-#include "headers/dice.h"
-#include "headers/character.h"
-#include "headers/utils.h"
+#include "descriptions.h"
+#include "dungeon.h"
+#include "npc.h"
+#include "dice.h"
+#include "character.h"
+#include "utils.h"
 
 #define MONSTER_FILE_SEMANTIC          "RLG327 MONSTER DESCRIPTION"
 #define MONSTER_FILE_VERSION           1U

@@ -1,10 +1,10 @@
 #include <stdlib.h>
 
-#include "headers/character.h"
-#include "headers/heap.h"
-#include "headers/npc.h"
-#include "headers/pc.h"
-#include "headers/dungeon.h"
+#include "character.h"
+#include "heap.h"
+#include "npc.h"
+#include "pc.h"
+#include "dungeon.h"
 
 void character_delete(character *c)
 {

@@ -1,1 +1,1 @@
-sudoku.o: sudoku.cpp
+sudoku.o: sudoku.cpp sudoku.h

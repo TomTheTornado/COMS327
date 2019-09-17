@@ -1,0 +1,102 @@
+Version 1.01
+1/25/19 
+    Started dungeon.c
+    Print border around dungeon
+1/26/19 
+    Generate number of rooms and locations
+    Generate room size
+    Fixed room and wall overlaps
+1/27/19
+    Fixed room formatting
+    Changed number of generated rooms to use decay method
+    Saves locations of the 4 corners of every room
+    Added corridors
+    Fixed corridors to connect to every room
+2/1/19
+    Generates stairs in the dungeon
+
+Version 1.02    
+2/6/19
+    Implemented hardness
+2/7/19
+    Removed unnessasary comments and cleaned up whitespace
+    Added dungeon.h file
+    Put dungeon variables into a struct type to simplify dungeon.c
+2/8/19
+    Added "--load", "--save", and "--load --save" commands
+    Added player character location, not rendered on screen
+    Rooms and stairs now use malloc
+    Implemented load
+    Implemented save
+    Implemented load and save
+
+Version 1.03
+2/13/19
+    Bug fixed the rooms and corridors
+2/14/19
+    Added a little more variety to corridors
+    Bug fixed save and load
+2/18/19
+    Implemented weight
+2/20/19
+    Implemented heap.h and heap.c from the 1.02 solution
+    Removed weight
+    Added non-tunneling
+    Added tunneling
+2/21/19
+    Added special cases if room or corridor is disconnected from player
+
+Version 1.04
+2/27/19
+    Added movement.h and movement.c
+    Dungeon updates using usleep(250000)
+    Added random movement for pc
+    Added monster generation
+    Added nummon flag to select number of monsters
+    Added load nummon to select number of monsters on loaded dungeon
+    Monsters represented in hexadecimal code based off of type
+
+Version 1.05
+3/09/19
+    Switched over to using the provided 1.04 solution code
+    Added window to game
+    Changed win and lose screens
+3/10/19
+    Added player movement with input keys
+    Restricted character so it can't tunnel
+    Added quit keys
+    Added quit screen
+3/12/19
+    Added monster display list
+3/13/19
+    Added downstairs and upstairs functionality
+
+Version 1.06
+3/20/19
+    Switched over to using the provided 1.05 solution code
+    Converted the files to c++
+3/21/19
+    Changed the structs to classes
+3/25/19
+    Added fog of war
+3/26/19
+    Added teleport functionality
+3/27/19
+    Added win-lose-quit screens
+
+Version 1.07
+3/30/19
+    Switch over to using the provided 1.06 solution code
+    Changed win-lose-quit screens
+3/31/19
+    Added the '-p' flag to the command line to display parsing
+4/1/19
+    Added monster parsing
+    Added object parsing
+
+Version 1.08
+4/10/19
+    Switched over to using the provided 1.07 solution code
+    Monsters now generate based on monster_desc.text
+    Made it so monsters spawn with colors
+    Monsters that are multiple colors may change color between turns

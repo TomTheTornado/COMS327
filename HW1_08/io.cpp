@@ -2,13 +2,15 @@
 #include <ncurses.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <sys/time.h>
+#include <sys/select.h>
 
-#include "headers/io.h"
-#include "headers/move.h"
-#include "headers/path.h"
-#include "headers/pc.h"
-#include "headers/utils.h"
-#include "headers/dungeon.h"
+#include "io.h"
+#include "move.h"
+#include "path.h"
+#include "pc.h"
+#include "utils.h"
+#include "dungeon.h"
 
 /* Same ugly hack we did in path.c */
 static dungeon *thedungeon;
@@ -113,7 +115,7 @@ void io_display_tunnel(dungeon *d)
     }
   }
   refresh();
-}
+}  
 
 void io_display_distance(dungeon *d)
 {
@@ -201,7 +203,7 @@ static character *io_nearest_visible_monster(dungeon *d)
 
 void io_display(dungeon *d)
 {
-  uint32_t y, x;
+  uint32_t y, x, monColor, monType, numColor, randNum;//, randColor;
   uint32_t illuminated;
   character *c;
   int32_t visible_monsters;
@@ -212,13 +214,29 @@ void io_display(dungeon *d)
       if ((illuminated = is_illuminated(d->PC, y, x))) {
         attron(A_BOLD);
       }
-      if (d->character_map[y][x] &&
-           can_see(d,
-                  character_get_pos(d->PC),
-                  character_get_pos(d->character_map[y][x]),
-                  1, 0)) {
-       mvaddch(y + 1, x,
-                character_get_symbol(d->character_map[y][x]));
+      if (d->character_map[y][x] &&can_see(d, character_get_pos(d->PC),
+            character_get_pos(d->character_map[y][x]), 1, 0)) {
+        if(character_get_symbol(d->character_map[y][x]) == '@'){
+          mvaddch(y + 1, x,character_get_symbol(d->character_map[y][x]));
+        }
+        else{
+          //srand(d->seed);
+          monType = d->character_map[y][x]->monType;
+
+          if(d->monster_descriptions[monType].color.size() > 0){
+            numColor = d->monster_descriptions[monType].color.size();
+            randNum = rand() % numColor; 
+            monColor = d->monster_descriptions[monType].color.at(randNum);
+          }
+          else{
+            monColor = 7;
+          }
+
+
+          attron(COLOR_PAIR(monColor));
+          mvaddch(y + 1, x,character_get_symbol(d->character_map[y][x]));
+          attroff(COLOR_PAIR(monColor));
+        }
         visible_monsters++;
       } else {
         switch (pc_learned_terrain(d->PC, y, x)) {
@@ -276,8 +294,8 @@ void io_display(dungeon *d)
     mvprintw(22, 55, "NONE.");
     attroff(COLOR_PAIR(COLOR_BLUE));
   }
-  
   io_print_message_queue(0, 0);
+  d->autoColor = 1;
 
   refresh();
 }
@@ -286,12 +304,55 @@ void io_display_no_fog(dungeon *d)
 {
   uint32_t y, x;
   character *c;
-
+  
   clear();
+
   for (y = 0; y < 21; y++) {
     for (x = 0; x < 80; x++) {
       if (d->character_map[y][x]) {
-        mvaddch(y + 1, x, d->character_map[y][x]->symbol);
+        uint32_t type, numColor, randNum, curColor;
+        //char objSym;
+        //objSym = d->object_map[y][x]->type;
+
+        if(character_get_symbol(d->character_map[y][x]) == '@'){
+          mvaddch(y + 1, x,character_get_symbol(d->character_map[y][x]));
+        }
+        else{
+          //srand(d->seed);
+          type = d->character_map[y][x]->monType;
+
+          if(d->monster_descriptions[type].color.size() > 0){
+            numColor = d->monster_descriptions[type].color.size();
+            randNum = rand() % numColor; 
+            curColor = d->monster_descriptions[type].color.at(randNum);
+          }
+          else{
+            curColor = 7;
+          }
+
+
+          attron(COLOR_PAIR(curColor));
+          mvaddch(y + 1, x,character_get_symbol(d->character_map[y][x]));
+          attroff(COLOR_PAIR(curColor));
+        }
+        // else{
+        //   std::cout << "1 ";
+        //   uint32_t i;
+        //   i = 0;
+        //   while(i < 10){
+        //     if((uint32_t)d->artifacts[i].position[dim_y] == y 
+        //       && (uint32_t)d->artifacts[i].position[dim_x] == x){
+        //         type = d->artifacts[i].objNum;
+        //         break;
+        //     }
+        //   }
+        //   //type = d->object_map[y][x]->objNum;
+        //   curColor = d->object_descriptions[type].color;
+        //   attron(COLOR_PAIR(curColor));
+        //   //mvaddch(y + 1, x, d->object_map[y][x]->symbol);
+        //   mvaddch(y+1, x, d->artifacts[i].symbol);
+        //   attroff(COLOR_PAIR(curColor));
+        // }
       } else {
         switch (mapxy(x, y)) {
         case ter_wall:
@@ -346,6 +407,7 @@ void io_display_no_fog(dungeon *d)
   }
   
   io_print_message_queue(0, 0);
+  d->autoColor = 2;
 }
 
 void io_display_monster_list(dungeon *d)
@@ -653,7 +715,22 @@ static void io_list_monsters(dungeon *d)
 void io_handle_input(dungeon *d)
 {
   uint32_t fail_code;
-  int key;
+  int key;//, autoColor;//, switchKey;//, autoColor;
+  // time_t t;
+  // time(&t);
+  // while (d->autoColor > 0){
+  //   autoColor = t ;
+  //   if(autoColor % 2400){//TODO add things for fog vs no fog
+  //     printf
+  //     //io_display(d);
+      
+  //     io_display_no_fog(d);
+  //     break;
+  //   }
+  //   //key = getch();
+    
+  // }
+  
 
   do {
     switch (key = getch()) {
@@ -710,6 +787,7 @@ void io_handle_input(dungeon *d)
       fail_code = move_pc(d, '<');
       break;
     case 'Q':
+    case 'q':
       d->quit = 1;
       fail_code = 0;
       break;
@@ -750,27 +828,27 @@ void io_handle_input(dungeon *d)
       io_list_monsters(d);
       fail_code = 1;
       break;
-    case 'q':
-      /* Demonstrate use of the message queue.  You can use this for *
-       * printf()-style debugging (though gdb is probably a better   *
-       * option.  Not that it matterrs, but using this command will  *
-       * waste a turn.  Set fail_code to 1 and you should be able to *
-       * figure out why I did it that way.                           */
-      io_queue_message("This is the first message.");
-      io_queue_message("Since there are multiple messages, "
-                       "you will see \"more\" prompts.");
-      io_queue_message("You can use any key to advance through messages.");
-      io_queue_message("Normal gameplay will not resume until the queue "
-                       "is empty.");
-      io_queue_message("Long lines will be truncated, not wrapped.");
-      io_queue_message("io_queue_message() is variadic and handles "
-                       "all printf() conversion specifiers.");
-      io_queue_message("Did you see %s?", "what I did there");
-      io_queue_message("When the last message is displayed, there will "
-                       "be no \"more\" prompt.");
-      io_queue_message("Have fun!  And happy printing!");
-      fail_code = 0;
-      break;
+    // case 'q':
+    //   /* Demonstrate use of the message queue.  You can use this for *
+    //    * printf()-style debugging (though gdb is probably a better   *
+    //    * option.  Not that it matterrs, but using this command will  *
+    //    * waste a turn.  Set fail_code to 1 and you should be able to *
+    //    * figure out why I did it that way.                           */
+    //   io_queue_message("This is the first message.");
+    //   io_queue_message("Since there are multiple messages, "
+    //                    "you will see \"more\" prompts.");
+    //   io_queue_message("You can use any key to advance through messages.");
+    //   io_queue_message("Normal gameplay will not resume until the queue "
+    //                    "is empty.");
+    //   io_queue_message("Long lines will be truncated, not wrapped.");
+    //   io_queue_message("io_queue_message() is variadic and handles "
+    //                    "all printf() conversion specifiers.");
+    //   io_queue_message("Did you see %s?", "what I did there");
+    //   io_queue_message("When the last message is displayed, there will "
+    //                    "be no \"more\" prompt.");
+    //   io_queue_message("Have fun!  And happy printing!");
+    //   fail_code = 0;
+    //   break;
     default:
       /* Also not in the spec.  It's not always easy to figure out what *
        * key code corresponds with a given keystroke.  Print out any    *

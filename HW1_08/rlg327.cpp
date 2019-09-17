@@ -4,12 +4,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "headers/dungeon.h"
-#include "headers/pc.h"
-#include "headers/npc.h"
-#include "headers/move.h"
-#include "headers/utils.h"
-#include "headers/io.h"
+#include "dungeon.h"
+#include "pc.h"
+#include "npc.h"
+#include "move.h"
+#include "utils.h"
+#include "io.h"
 
 const char *victory =
   "\n                                       o\n"
@@ -86,11 +86,11 @@ int main(int argc, char *argv[])
   char *load_file;
   char *pgm_file;
   
-  //parse_descriptions(&d);
-  //print_descriptions(&d); //Use to test descriptions
+  parse_descriptions(&d);
+  //print_descriptions(&d);
   
 
-  return 0;
+  //return 0;
   
   /* Default behavior: Seed with the time, generate a new dungeon, *
    * and don't write to disk.                                      */
@@ -216,14 +216,13 @@ int main(int argc, char *argv[])
   /* Ignoring PC position in saved dungeons.  Not a bug. */
   config_pc(&d);
   gen_monsters(&d);
+  //gen_objects(&d);
 
   io_display(&d);
   if (!do_load && !do_image) {
     io_queue_message("Seed is %u.", seed);
   }
-  d.quit = false;
-  printf("%d Monsters", d.num_monsters);
-  while (pc_is_alive(&d) && dungeon_has_npcs(&d) && !d.quit) { //Place where everything is actually happening
+  while (pc_is_alive(&d) && dungeon_has_npcs(&d) && !d.quit) {///Moves take place here
     do_moves(&d);
   }
   io_display(&d);
@@ -266,8 +265,7 @@ int main(int argc, char *argv[])
      * delete_pc(), because it will lead to a double delete.               */
     character_delete(d.PC);
   }
-
-  //destroy_descriptions(&d);
+  destroy_descriptions(&d);
   delete_dungeon(&d);
 
   return 0;

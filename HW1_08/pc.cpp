@@ -2,12 +2,12 @@
 
 #include "string.h"
 
-#include "headers/dungeon.h"
-#include "headers/pc.h"
-#include "headers/utils.h"
-#include "headers/move.h"
-#include "headers/path.h"
-#include "headers/io.h"
+#include "dungeon.h"
+#include "pc.h"
+#include "utils.h"
+#include "move.h"
+#include "path.h"
+#include "io.h"
 
 uint32_t pc_is_alive(dungeon *d)
 {
